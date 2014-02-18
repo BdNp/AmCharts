@@ -1,0 +1,121 @@
+<html>
+<head>
+  <script src="amcharts/amcharts.js" type="text/javascript"></script>
+  <script src="amcharts/serial.js" type="text/javascript"></script>
+  <script src="amcharts/pie.js" type="text/javascript"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+
+<style>
+
+@media screen {
+  h1 {
+    display: none;
+  }
+}
+
+@media print {
+  .print {
+    display: none;
+  }
+}
+
+.container {
+  width: 660px;
+  margin: 10px auto;
+  padding: 10px;
+}
+
+a.print {
+  background: #080;
+  border-radius: 2px;
+  color: white;
+  padding: 10px;
+}
+
+section {
+  width: 640px;
+  height: 280px;
+}
+
+#table {
+  height: 120px;
+}
+
+table {
+  width: 90%;
+  margin:0 auto;
+}
+td {
+  border: 1px solid black;
+  padding: 5px 10px;
+  width: 50%;
+}
+</style>
+
+<body>
+  <div class='container'>
+    <h1>Reports</h1>
+    <a class='print' href="javascript:void(0);" onClick="window.print()">Print</a>
+    <section id='bar_chart'></section>
+    <section id='table'>
+      <table id="table_chart" cellspacing="0">
+        <tr>
+          <td>Page ID</td>
+          <td>Hits</td>
+        </tr>
+      </table>
+    </section>
+    <section id='pie_chart'></section>
+  </div>
+</body>
+<script type="text/javascript">
+
+var hits = [{
+  'page_id': 'page_id 1',
+  'hits': 1
+}, {
+  'page_id': 'page_id 2',
+  'hits': 2
+}, {
+  'page_id': 'page_id 3',
+  'hits': 5
+},
+];
+
+
+AmCharts.ready( function() {
+  // generate charts
+  var chart = new AmCharts.AmSerialChart();
+  chart.dataProvider = hits;
+  chart.categoryField = "page_id";
+
+  // apply chart to barbargraph
+  var bargraph = new AmCharts.AmGraph();
+  bargraph.valueField = 'hits';
+  bargraph.type = 'column';
+  bargraph.fillAlphas = 0.8;
+
+  chart.addGraph(bargraph);
+  chart.write('bar_chart');
+
+  // append values to table
+  jQuery('#table_chart').ready(function($) {
+    $.each( hits, function(key, element) {
+      $('#table_chart').append('<tr><td>' + element.page_id + '</td><td>'+ element.hits + '</td></tr>' );
+    });
+  });
+
+  //create pie chart
+  var pieChart = new AmCharts.AmPieChart();
+    pieChart.valueField = 'hits';
+    pieChart.titleField = 'page_id';
+    pieChart.groupedTitle = "Hit %";
+    pieChart.dataProvider = hits;
+
+  pieChart.write('pie_chart');
+
+});
+
+</script>
+</html>
